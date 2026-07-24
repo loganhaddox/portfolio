@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logan Haddox — Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#ffffff;
+      --ink:#111111;
+      --grey:#888888;
+      --grey-light:#b3b3b3;
+      --line:#e2e2e2;
+      --accent:#7a3ac4;
+      --mono:'JetBrains Mono', monospace;
+      --sans:'Inter', -apple-system, sans-serif;
+      --gutter: clamp(20px, 4vw, 40px);
+    }
+
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:var(--sans);
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{color:inherit; text-decoration:none;}
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px var(--gutter);
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:0.02em;
+      color:var(--ink);
+      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:0;
+      background:rgba(255,255,255,0.92);
+      backdrop-filter:blur(6px);
+      z-index:50;
+    }
+    .topbar .left{display:flex; gap:8px; align-items:center; cursor:pointer;}
+    .topbar .left .plus{color:var(--grey-light);}
+    .topbar .nav{display:flex; gap:22px;}
+    .topbar .nav a{color:var(--grey); transition:color .15s ease;}
+    .topbar .nav a:hover, .topbar .nav a.active{color:var(--ink);}
+    .topbar .right{color:var(--grey);}
+
+    .gallery-shell{
+      min-height: calc(100vh - 72px);
+      padding: clamp(18px, 2.5vw, 28px) var(--gutter) 24px;
+      overflow:hidden;
+    }
+
+    .gallery-scroll-wrap{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .gallery-rail{
+      display:flex;
+      gap:14px;
+      width:100%;
+      height: min(80vh);
+      align-items:center;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding-bottom:8px;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+
+    .gallery-rail::-webkit-scrollbar{display:none;}
+
+    .gallery-item{
+      position:relative;
+      flex:0 0 auto;
+      overflow:hidden;
+      background:#f2f2f2;
+      border-radius:2px;
+      height:100%;
+      opacity:0;
+      transform:translateY(8px);
+      animation:fadeUp .6s ease forwards;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .gallery-item img{
+      width:auto;
+      height:100%;
+      max-width:none;
+      display:block;
+      object-fit:contain;
+    }
+
+    .gallery-item::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 100%);
+      pointer-events:none;
+    }
+
+    .gallery-progress{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      overflow:visible;
+      padding-bottom:2px;
+    }
+
+    .gallery-progress button{
+      flex:0 0 auto;
+      border:none;
+      padding:0;
+      background:none;
+      cursor:pointer;
+      opacity:0.45;
+      transition:opacity .2s ease, transform .2s ease;
+    }
+
+    .gallery-progress button.active{
+      opacity:1;
+      transform:scale(1.04);
+    }
+
+    .gallery-progress img{
+      width:44px;
+      height:44px;
+      object-fit:cover;
+      display:block;
+      border-radius:2px;
+      border:1px solid var(--line);
+      background:#f4f4f4;
+    }
+
+    @keyframes fadeUp{
+      to{opacity:1; transform:translateY(0);}
+    }
+
+    @media (max-width: 800px){
+      .topbar .nav{display:none;}
+      .gallery-rail{height:min(60vh, 560px);} 
+      .gallery-progress img{width:36px; height:36px;}
+      .gallery-progress{gap:6px;}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html#intro" class="left"><span class="plus">+++</span> logan haddox</a>
+  <nav class="nav">
+    <a href="index.html#index">projects</a>
+      <a href="gallery.html" class="active">gallery</a>
+      <a href="bio.html">about</a>
+    </nav>
+    <div class="right" id="topbar-year">2026</div>
+  </header>
+
+  <main class="gallery-shell">
+    <div class="gallery-scroll-wrap">
+      <div class="gallery-rail" id="galleryRail"></div>
+      <div class="gallery-progress" id="galleryProgress"></div>
+    </div>
+  </main>
+
+  <script src="Gallery/image-manifest.js"></script>
+  <script>
+    const images = window.galleryImages || [];
+
+    const rail = document.getElementById('galleryRail');
+    const progress = document.getElementById('galleryProgress');
+    const shuffled = [...images].sort(() => Math.random() - 0.5);
+
+    const updateActiveThumb = () => {
+      // Find whichever gallery item's left edge is closest to the rail's current scroll position.
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      Array.from(rail.children).forEach((child, index) => {
+        const distance = Math.abs(child.offsetLeft - rail.scrollLeft);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      Array.from(progress.children).forEach((button, buttonIndex) => {
+        button.classList.toggle('active', buttonIndex === closestIndex);
+      });
+    };
+
+    shuffled.forEach((src, index) => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.style.animationDelay = `${index * 0.02}s`;
+      item.innerHTML = `<img src="${src}" alt="Portfolio image ${index + 1}">`;
+      item.querySelector('img').addEventListener('load', updateActiveThumb);
+      rail.appendChild(item);
+
+      const thumb = document.createElement('button');
+      thumb.type = 'button';
+      thumb.className = 'thumb-button';
+      thumb.innerHTML = `<img src="${src}" alt="Thumbnail ${index + 1}">`;
+      thumb.addEventListener('click', () => {
+        const target = rail.children[index];
+        if (target) {
+          stopWheelAnimation();
+          wheelTarget = target.offsetLeft;
+          rail.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
+          updateActiveThumb();
+        }
+      });
+      progress.appendChild(thumb);
+    });
+
+    rail.addEventListener('scroll', updateActiveThumb);
+
+    let wheelTarget = rail.scrollLeft;
+    let wheelFrame = null;
+
+    function stopWheelAnimation() {
+      if (wheelFrame) {
+        cancelAnimationFrame(wheelFrame);
+        wheelFrame = null;
+      }
+    }
+
+    function animateWheelScroll() {
+      const diff = wheelTarget - rail.scrollLeft;
+      if (Math.abs(diff) < 0.5) {
+        rail.scrollLeft = wheelTarget;
+        wheelFrame = null;
+        return;
+      }
+      rail.scrollLeft += diff * 0.16;
+      wheelFrame = requestAnimationFrame(animateWheelScroll);
+    }
+
+    document.addEventListener('wheel', (event) => {
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+      event.preventDefault();
+
+      const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+      wheelTarget = Math.max(0, Math.min(wheelTarget + event.deltaY * 1.2, maxScroll));
+
+      if (!wheelFrame) {
+        wheelFrame = requestAnimationFrame(animateWheelScroll);
+      }
+    }, { passive: false });
+
+    updateActiveThumb();
+  </script>
+</body>
+</html>

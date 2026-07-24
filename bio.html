@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logan Haddox — Bio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#ffffff;
+      --ink:#111111;
+      --grey:#888888;
+      --grey-light:#b3b3b3;
+      --line:#e2e2e2;
+      --accent:#7a3ac4;
+      --mono:'JetBrains Mono', monospace;
+      --sans:'Inter', -apple-system, sans-serif;
+      --gutter: clamp(20px, 4vw, 40px);
+    }
+
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:var(--sans);
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:inherit; text-decoration:none;}
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px var(--gutter);
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:0.02em;
+      color:var(--ink);
+      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:0;
+      background:rgba(255,255,255,0.92);
+      backdrop-filter:blur(6px);
+      z-index:50;
+    }
+    .topbar .left{display:flex; gap:8px; align-items:center; cursor:pointer;}
+    .topbar .left .plus{color:var(--grey-light);}
+    .topbar .nav{display:flex; gap:22px;}
+    .topbar .nav a{color:var(--grey); transition:color .15s ease;}
+    .topbar .nav a:hover, .topbar .nav a.active{color:var(--ink);} 
+    .topbar .right{color:var(--grey);} 
+
+    main{padding: clamp(24px, 3vw, 40px) var(--gutter) 56px;}
+    .bio-grid{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: clamp(24px, 4vw, 56px);
+      align-items:start;
+    }
+    .bio-portrait{
+      width:100%;
+      aspect-ratio:3/4;
+      background: linear-gradient(160deg,#222 0%, #111 60%, #000 100%);
+      border-radius:2px;
+      overflow:hidden;
+      position:relative;
+    }
+    .bio-portrait img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .bio-greeting{
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:0.04em;
+      color:var(--grey);
+      text-transform:uppercase;
+      margin:0 0 16px;
+    }
+    .bio-text{
+      font-size: clamp(15px, 1.2vw, 18px);
+      line-height:1.7;
+      color:var(--ink);
+      max-width:700px;
+      margin:0 0 28px;
+    }
+    .bio-edu{display:grid; gap:16px; margin-top:24px;}
+    .edu-item{display:flex; gap:14px; align-items:flex-start; padding-top:8px; border-top:1px solid var(--line);}
+    .edu-badge{
+      font-family:var(--mono);
+      font-size:11px;
+      letter-spacing:0.05em;
+      color:var(--grey);
+      border:1px solid var(--line);
+      padding:6px 8px;
+      min-width:48px;
+      text-align:center;
+    }
+    .edu-school{font-weight:600; margin-bottom:2px;}
+    .edu-deg, .edu-yr{color:var(--grey); font-size:14px; line-height:1.5;}
+
+    .bio-resume-container{margin-top:28px;}
+    .resume-details{border:1px solid var(--line); border-radius:2px; padding:14px 16px;}
+    .resume-details summary{cursor:pointer; list-style:none; font-family:var(--mono); font-size:12px; letter-spacing:0.04em; text-transform:uppercase; color:var(--grey);}
+    .resume-details summary::-webkit-details-marker{display:none;}
+    .resume-expand-content{margin-top:12px;}
+    .pdf-link{display:inline-flex; align-items:center; gap:6px; color:var(--ink); text-decoration:underline;}
+
+    @media (max-width: 900px){
+      .bio-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html#intro" class="left"><span class="plus">+++</span> logan haddox</a>
+  <nav class="nav">
+    <a href="index.html#index">projects</a>
+      <a href="gallery.html">gallery</a>
+      <a href="bio.html">about</a>
+    </nav>
+    <div class="right" id="topbar-year">2026</div>
+  </header>
+
+  <main>
+    <div class="bio-grid">
+      <div class="bio-portrait">
+        <img src="Images/headshot.jpg" alt="Portrait of Logan Haddox">
+      </div>
+      <div>
+        <p class="bio-greeting">Hi, I'm Logan :)</p>
+        <p class="bio-text">I am Logan, a multifaceted designer focused on product design for the outdoor sport and recreation industry. I have grown my skill-set working on a variety of softgood categories — accessories, apparel, engineered knitwear, backpacks, and 3D asset + pattern creation. I bring curiosity and innovation to every project, while staying rooted in business needs and brand relevant creative decisions.</p>
+
+        <div class="bio-edu">
+          <div class="edu-item">
+            <div class="edu-badge">USU</div>
+            <div>
+              <div class="edu-school">Utah State University</div>
+              <div class="edu-deg">BS, Outdoor Product Design and Development</div>
+              <div class="edu-yr">2022</div>
+            </div>
+          </div>
+          <div class="edu-item">
+            <div class="edu-badge">BRTN</div>
+            <div>
+              <div class="edu-school">Burton Snowboards</div>
+              <div class="edu-deg">Designer 1 - Softgoods</div>
+              <div class="edu-yr">2022 — Current</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bio-resume-container">
+          <details class="resume-details">
+            <summary><span class="plus">+</span> Resume</summary>
+            <div class="resume-expand-content">
+              <a href="Files/Logan Haddox Resume 082324.pdf" target="_blank" class="pdf-link">
+                <svg width="12" height="14" viewBox="0 0 12 14" fill="none" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M1 13H11M6 1V9M6 9L3 6M6 9L9 6" stroke="currentColor" stroke-width="1.2"/></svg>
+                → View / Download Full Resume (PDF)
+              </a>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
